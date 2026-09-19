@@ -2,6 +2,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import { useRef } from "react";
 import { srcSet, unsplash } from "../lib/media";
 import { fadeUp, scaleIn, staggerContainer } from "../lib/motion";
+import { CountUp } from "../components/CountUp";
 import { GlassCard } from "../components/GlassCard";
 import { ScrollReveal } from "../components/ScrollReveal";
 import { SectionHeading } from "../components/SectionHeading";
@@ -10,10 +11,10 @@ const MAIN_IMAGE = { id: "1525610553991-2bede1a236e2", alt: "A guest reading by 
 const INSET_IMAGE = { id: "1524350876685-274059332603", alt: "Green coffee beans spilling from a burlap sack" };
 
 const stats = [
-  { value: "12+", label: "Single Origin Coffees" },
-  { value: "6", label: "Years Brewing" },
-  { value: "20K+", label: "Cups Served" },
-  { value: "1", label: "Community" },
+  { value: 12, suffix: "+", label: "Single Origin Coffees" },
+  { value: 6, label: "Years Brewing" },
+  { value: 20, suffix: "K+", label: "Cups Served" },
+  { value: 1, label: "Community" },
 ];
 
 const paragraphs = [
@@ -62,10 +63,10 @@ export function Story() {
             viewport={{ once: true, amount: 0.3 }}
             className="mt-14 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-white/10 pt-10 sm:grid-cols-4"
           >
-            {stats.map((stat) => (
+            {stats.map((stat, index) => (
               <motion.div key={stat.label} variants={fadeUp} className="flex flex-col gap-2">
                 <dd className="order-first font-heading text-[2.6rem] italic leading-none tracking-[-0.03em] text-cream sm:text-5xl">
-                  {stat.value}
+                  <CountUp value={stat.value} suffix={stat.suffix} delay={index * 0.12} />
                 </dd>
                 <dt className="text-[10.5px] font-medium uppercase tracking-[0.22em] text-white/45">
                   {stat.label}

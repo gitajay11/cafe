@@ -37,8 +37,8 @@ export const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination
 )}`;
 
 export const navLinks = [
-  { label: "Menu", href: "#menu", id: "menu" },
   { label: "Story", href: "#story", id: "story" },
+  { label: "Menu", href: "#menu", id: "menu" },
   { label: "Experience", href: "#experience", id: "experience" },
   { label: "Gallery", href: "#gallery", id: "gallery" },
   { label: "Visit", href: "#visit", id: "visit" },
