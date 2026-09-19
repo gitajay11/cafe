@@ -1,0 +1,411 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/* Design tokens                                                        */
+/* ------------------------------------------------------------------ */
+@theme {
+  --font-heading: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-body: "Barlow", ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #080706;
+  --color-espresso: #17100c;
+  --color-mocha: #2a1b13;
+  --color-cream: #f2e8db;
+  --color-caramel: #c9975b;
+  --color-copper: #a26a45;
+
+  --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                 */
+/* ------------------------------------------------------------------ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: #080706;
+    color: #fff;
+    font-family: var(--font-body);
+    font-weight: 300;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: rgba(201, 151, 91, 0.35);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-caramel);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Utilities                                                            */
+/* ------------------------------------------------------------------ */
+@utility container-x {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1400px;
+  padding-inline: 1.25rem;
+  @media (min-width: 640px) {
+    padding-inline: 2rem;
+  }
+  @media (min-width: 1024px) {
+    padding-inline: 3rem;
+  }
+}
+
+@utility eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-caramel);
+}
+
+/* ------------------------------------------------------------------ */
+/* Components                                                           */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* ---- Liquid glass ------------------------------------------------ */
+  .liquid-glass,
+  .liquid-glass-strong {
+    --glass-bg: rgba(255, 255, 255, 0.035);
+    --glass-blur: 18px;
+    position: relative;
+    isolation: isolate;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.07),
+      0 8px 32px -14px rgba(0, 0, 0, 0.55);
+    transition:
+      background-color 0.5s ease,
+      box-shadow 0.5s ease,
+      backdrop-filter 0.5s ease;
+  }
+
+  .liquid-glass-strong {
+    --glass-bg: rgba(255, 255, 255, 0.055);
+    --glass-blur: 28px;
+  }
+
+  /* gradient border via masked pseudo-element */
+  .liquid-glass::before,
+  .liquid-glass-strong::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    pointer-events: none;
+    z-index: 2;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.32) 0%,
+      rgba(255, 255, 255, 0.06) 35%,
+      rgba(201, 151, 91, 0.08) 65%,
+      rgba(201, 151, 91, 0.32) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    transition: opacity 0.5s ease;
+  }
+
+  /* soft inner highlight */
+  .liquid-glass::after,
+  .liquid-glass-strong::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(
+      120% 60% at 50% -10%,
+      rgba(255, 255, 255, 0.09),
+      transparent 60%
+    );
+    transition: opacity 0.5s ease;
+  }
+
+  /* ---- Navbar shell (transparent → glass on scroll) ---------------- */
+  .nav-shell {
+    --glass-bg: rgba(12, 10, 8, 0);
+    --glass-blur: 0px;
+    box-shadow: none;
+  }
+  .nav-shell::before,
+  .nav-shell::after {
+    opacity: 0;
+  }
+  .nav-shell[data-scrolled="true"] {
+    --glass-bg: rgba(12, 10, 8, 0.58);
+    --glass-blur: 22px;
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+      0 12px 40px -12px rgba(0, 0, 0, 0.65);
+  }
+  .nav-shell[data-scrolled="true"]::before,
+  .nav-shell[data-scrolled="true"]::after {
+    opacity: 1;
+  }
+
+  /* ---- Coffee steam ------------------------------------------------ */
+  .steam-wisp {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    opacity: 0;
+    animation: steam-rise var(--d, 6s) ease-in-out var(--delay, 0s) infinite;
+    will-change: transform, opacity;
+  }
+
+  /* ---- Dust particles ---------------------------------------------- */
+  .dust {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--s);
+    height: var(--s);
+    border-radius: 9999px;
+    background: rgba(236, 204, 160, 0.9);
+    box-shadow: 0 0 calc(var(--s) * 2.5) rgba(236, 204, 160, 0.45);
+    opacity: 0;
+    filter: blur(0.3px);
+    animation: dust-drift var(--d) linear var(--delay) infinite;
+    will-change: transform, opacity;
+  }
+
+  /* ---- Atmosphere -------------------------------------------------- */
+  .atmo-glow {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(80px);
+    animation: glow-drift var(--d, 40s) ease-in-out var(--delay, 0s) infinite alternate;
+    will-change: transform;
+  }
+
+  .grain {
+    position: absolute;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 220px 220px;
+    animation: grain-drift 38s linear infinite;
+  }
+
+  .vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      120% 90% at 50% 45%,
+      transparent 45%,
+      rgba(8, 7, 6, 0.55) 100%
+    );
+  }
+
+  /* ---- Menu card glow ---------------------------------------------- */
+  .menu-card-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    opacity: 0;
+    background: radial-gradient(
+      90% 70% at 50% 0%,
+      rgba(201, 151, 91, 0.2),
+      transparent 70%
+    );
+    transition: opacity 0.6s ease;
+  }
+  .group:hover .menu-card-glow,
+  .group:focus-within .menu-card-glow {
+    opacity: 1;
+  }
+
+  /* ---- Map pin pulse ----------------------------------------------- */
+  .pin-pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pin-pulse 3s ease-out infinite;
+  }
+
+  /* ---- Skip link --------------------------------------------------- */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+    padding: 0.6rem 1rem;
+    border-radius: 9999px;
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-size: 13px;
+    font-weight: 500;
+    transform: translateY(-200%);
+    transition: transform 0.2s ease;
+  }
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+
+  /* ---- Spinner ----------------------------------------------------- */
+  .spinner {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 9999px;
+    border: 2px solid rgba(8, 7, 6, 0.25);
+    border-top-color: currentColor;
+    animation: spin 0.9s linear infinite;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Keyframes                                                            */
+/* ------------------------------------------------------------------ */
+@keyframes steam-rise {
+  0% {
+    transform: translate3d(0, 6%, 0) scale(0.9, 0.85);
+    opacity: 0;
+  }
+  20% {
+    opacity: var(--o, 0.5);
+  }
+  60% {
+    opacity: calc(var(--o, 0.5) * 0.7);
+  }
+  100% {
+    transform: translate3d(var(--sway, 8px), -42%, 0) scale(1.18, 1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes dust-drift {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: var(--o);
+  }
+  55% {
+    transform: translate3d(calc(var(--dx) * 0.45), calc(var(--dy) * 0.55), 0);
+  }
+  88% {
+    opacity: var(--o);
+  }
+  100% {
+    transform: translate3d(var(--dx), var(--dy), 0);
+    opacity: 0;
+  }
+}
+
+@keyframes glow-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(6%, -4%, 0) scale(1.12);
+  }
+}
+
+@keyframes grain-drift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-8%, -6%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes pin-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Reduced motion                                                       */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .steam-wisp,
+  .dust,
+  .grain,
+  .atmo-glow,
+  .pin-pulse {
+    animation: none !important;
+  }
+  .steam-wisp {
+    opacity: 0.16;
+  }
+  .dust {
+    opacity: 0;
+  }
+  .pin-pulse {
+    opacity: 0.25;
+    transform: scale(1.6);
+  }
+  .liquid-glass,
+  .liquid-glass-strong,
+  .menu-card-glow {
+    transition: none;
+  }
+}
