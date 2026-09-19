@@ -8,6 +8,8 @@ export interface ImageAsset {
   id: string;
   /** Meaningful alt text — describe the subject, not the styling. */
   alt: string;
+  /** Native width ÷ height. Lets layouts fit the photo instead of cropping it. */
+  ratio?: number;
 }
 
 export const unsplash = (id: string, width: number, extra = ""): string =>

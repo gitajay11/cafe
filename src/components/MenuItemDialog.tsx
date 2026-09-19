@@ -1,8 +1,8 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useId, useRef } from "react";
+import { useId, useRef, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import type { MenuItem, Nutrition } from "../content/menu";
-import { srcSet, unsplash } from "../lib/media";
+import { cn, srcSet, unsplash } from "../lib/media";
 import { EASE } from "../lib/motion";
 import { useModal } from "../lib/useModal";
 import { CheckIcon, CloseIcon, LeafIcon } from "./Icons";
@@ -36,6 +36,12 @@ export function MenuItemDialog({ item, categoryLabel, onClose }: MenuItemDialogP
 
   useModal(item !== null, onClose, panelRef, closeRef);
 
+  // Portrait photos sit beside the text; landscape photos sit above it.
+  // Either way the box takes the photo's own aspect ratio, so nothing is
+  // cropped — a blurred copy fills any sliver the layout can't match.
+  const ratio = item?.image?.ratio ?? 1.5;
+  const portrait = ratio < 1;
+
   return createPortal(
     <AnimatePresence>
       {item ? (
@@ -66,7 +72,7 @@ export function MenuItemDialog({ item, categoryLabel, onClose }: MenuItemDialogP
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.98 }}
             transition={{ duration: 0.55, ease: EASE }}
-            className="liquid-glass-strong relative flex max-h-[92svh] w-full max-w-3xl flex-col overflow-hidden rounded-t-[28px] sm:rounded-[32px]"
+            className={cn("liquid-glass-strong relative flex max-h-[92svh] w-full flex-col overflow-hidden rounded-t-[28px] sm:rounded-[32px]", portrait ? "max-w-4xl" : "max-w-2xl")}
           >
             <button
               ref={closeRef}
@@ -79,25 +85,38 @@ export function MenuItemDialog({ item, categoryLabel, onClose }: MenuItemDialogP
             </button>
 
             <div className="overflow-y-auto overscroll-contain">
-              <div className="grid grid-cols-1 sm:grid-cols-5">
+              <div className={cn("grid grid-cols-1", portrait && "sm:grid-cols-5")}>
                 {item.image ? (
-                  <div className="relative aspect-[16/10] sm:col-span-2 sm:aspect-auto sm:min-h-full">
+                  <div
+                    className={cn(
+                      "relative aspect-(--ratio) max-h-[42svh] w-full overflow-hidden bg-mocha/60",
+                      portrait ? "sm:col-span-2 sm:aspect-auto sm:max-h-none sm:min-h-full" : "sm:max-h-[46svh]",
+                    )}
+                    style={{ "--ratio": ratio } as CSSProperties}
+                  >
+                    {/* blurred self-fill for any leftover space */}
                     <img
-                      src={unsplash(item.image.id, 800)}
-                      srcSet={srcSet(item.image.id, [480, 800, 1000])}
-                      sizes="(min-width: 640px) 320px, 100vw"
+                      src={unsplash(item.image.id, 64)}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 h-full w-full scale-125 object-cover opacity-70 blur-2xl"
+                    />
+                    <img
+                      src={unsplash(item.image.id, 1000)}
+                      srcSet={srcSet(item.image.id, [480, 800, 1200, 1600])}
+                      sizes={portrait ? "(min-width: 640px) 360px, 100vw" : "(min-width: 640px) 672px, 100vw"}
                       alt={item.image.alt}
                       decoding="async"
-                      className="absolute inset-0 h-full w-full object-cover"
+                      className="absolute inset-0 h-full w-full object-contain"
                     />
                     <div
                       aria-hidden="true"
-                      className="absolute inset-0 bg-[linear-gradient(to_top,rgba(8,7,6,0.7),transparent_60%)] sm:bg-[linear-gradient(to_right,transparent_60%,rgba(12,10,8,0.7))]"
+                      className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(8,7,6,0.45),transparent_35%)]"
                     />
                   </div>
                 ) : null}
 
-                <div className="p-6 sm:col-span-3 sm:p-8">
+                <div className={cn("p-6 sm:p-8", portrait && "sm:col-span-3")}>
                   {categoryLabel ? <p className="eyebrow">{"// "}{categoryLabel}</p> : null}
                   <div className="mt-3 flex items-baseline justify-between gap-4">
                     <h2 id={titleId} className="font-heading text-[2rem] italic leading-none tracking-[-0.02em] text-cream sm:text-[2.4rem]">

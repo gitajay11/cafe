@@ -50,7 +50,7 @@ export const menu: MenuCategory[] = [
         name: "Espresso",
         description: "A 30 ml double, syrupy and bright, from this week's single origin.",
         price: "₹180",
-        image: { id: "1506619216599-9d16d0903dfd", alt: "A small cup of espresso on a warm beige table" },
+        image: { id: "1506619216599-9d16d0903dfd", alt: "A small cup of espresso on a warm beige table", ratio: 1.493 },
         serving: "Double shot · 60 ml",
         nutrition: { kcal: 5, caffeine: 126, protein: 0.3, sugar: 0, fat: 0 },
         benefits: [
@@ -66,7 +66,7 @@ export const menu: MenuCategory[] = [
         name: "Americano",
         description: "Espresso lengthened with soft water. Clean, cocoa-toned, unhurried.",
         price: "₹200",
-        image: { id: "1514432324607-a09d9b4aefdd", alt: "Black coffee with fine crema seen from above" },
+        image: { id: "1514432324607-a09d9b4aefdd", alt: "Black coffee with fine crema seen from above", ratio: 0.667 },
         serving: "240 ml",
         nutrition: { kcal: 10, caffeine: 126, protein: 0.5, sugar: 0, fat: 0 },
         benefits: [
@@ -82,7 +82,7 @@ export const menu: MenuCategory[] = [
         name: "Cappuccino",
         description: "Velvet foam over a double shot. Dusted with cocoa on request.",
         price: "₹240",
-        image: { id: "1517256064527-09c73fc73e38", alt: "Cappuccino with cocoa-dusted foam" },
+        image: { id: "1517256064527-09c73fc73e38", alt: "Cappuccino with cocoa-dusted foam", ratio: 0.667 },
         serving: "180 ml",
         nutrition: { kcal: 120, caffeine: 126, protein: 6, sugar: 9, fat: 6 },
         benefits: [
@@ -98,7 +98,7 @@ export const menu: MenuCategory[] = [
         name: "Flat White",
         description: "Ristretto and silky microfoam in a small cup. Strong, smooth, honest.",
         price: "₹260",
-        image: { id: "1485808191679-5f86510681a2", alt: "Flat white with latte art on a blue saucer" },
+        image: { id: "1485808191679-5f86510681a2", alt: "Flat white with latte art on a blue saucer", ratio: 0.667 },
         serving: "160 ml",
         nutrition: { kcal: 140, caffeine: 130, protein: 7, sugar: 10, fat: 7 },
         benefits: [
@@ -114,7 +114,7 @@ export const menu: MenuCategory[] = [
         name: "Café Latte",
         description: "Our gentlest cup — steamed milk, a whisper of sweetness, plenty of comfort.",
         price: "₹250",
-        image: { id: "1544787219-7f47ccb76574", alt: "Milky latte in a white mug beside two cookies" },
+        image: { id: "1544787219-7f47ccb76574", alt: "Milky latte in a white mug beside two cookies", ratio: 0.725 },
         serving: "300 ml",
         nutrition: { kcal: 190, caffeine: 126, protein: 10, sugar: 15, fat: 9 },
         benefits: [
@@ -130,7 +130,7 @@ export const menu: MenuCategory[] = [
         name: "Mocha",
         description: "Single-origin dark chocolate melted into espresso and warm milk.",
         price: "₹280",
-        image: { id: "1502462041640-b3d7e50d0662", alt: "Mocha with heart-shaped latte art on dark wood" },
+        image: { id: "1502462041640-b3d7e50d0662", alt: "Mocha with heart-shaped latte art on dark wood", ratio: 1.504 },
         serving: "300 ml",
         nutrition: { kcal: 290, caffeine: 140, protein: 10, sugar: 27, fat: 12 },
         benefits: [
@@ -146,7 +146,7 @@ export const menu: MenuCategory[] = [
         name: "Cold Brew",
         description: "Steeped 18 hours, served over ice. Mellow, sweet and dangerously easy.",
         price: "₹260",
-        image: { id: "1504753793650-d4a2b783c15e", alt: "Tall glass of iced coffee with milk swirling" },
+        image: { id: "1504753793650-d4a2b783c15e", alt: "Tall glass of iced coffee with milk swirling", ratio: 0.664 },
         serving: "350 ml",
         nutrition: { kcal: 5, caffeine: 200, protein: 0, sugar: 0, fat: 0 },
         benefits: [
@@ -169,7 +169,7 @@ export const menu: MenuCategory[] = [
         name: "Smoked Caramel Latte",
         description: "House caramel, smoked over oak, folded into a double shot and steamed milk.",
         price: "₹320",
-        image: { id: "1534778101976-62847782c213", alt: "Latte with layered art in a ceramic cup" },
+        image: { id: "1534778101976-62847782c213", alt: "Latte with layered art in a ceramic cup", ratio: 0.667 },
         note: "House favourite",
         serving: "300 ml",
         nutrition: { kcal: 260, caffeine: 126, protein: 9, sugar: 26, fat: 9 },
@@ -186,7 +186,7 @@ export const menu: MenuCategory[] = [
         name: "Vanilla Bean Cloud",
         description: "Espresso beneath a slow-poured cloud of vanilla-bean cold foam.",
         price: "₹330",
-        image: { id: "1541167760496-1628856ab772", alt: "Milk being poured into a coffee cup" },
+        image: { id: "1541167760496-1628856ab772", alt: "Milk being poured into a coffee cup", ratio: 1.786 },
         serving: "240 ml",
         nutrition: { kcal: 150, caffeine: 126, protein: 4, sugar: 14, fat: 6 },
         benefits: [
@@ -202,7 +202,7 @@ export const menu: MenuCategory[] = [
         name: "Hazelnut Espresso",
         description: "A double shot with toasted hazelnut and a touch of raw sugar. Small, intense.",
         price: "₹300",
-        image: { id: "1510591509098-f4fdc6d0ff04", alt: "Espresso shot with thick crema seen from above" },
+        image: { id: "1510591509098-f4fdc6d0ff04", alt: "Espresso shot with thick crema seen from above", ratio: 1.504 },
         serving: "90 ml",
         nutrition: { kcal: 60, caffeine: 126, protein: 1, sugar: 9, fat: 2 },
         benefits: [
@@ -218,7 +218,7 @@ export const menu: MenuCategory[] = [
         name: "Cinnamon Cream Cold Brew",
         description: "Our 18-hour cold brew under sweet cinnamon cream. Best on a warm afternoon.",
         price: "₹340",
-        image: { id: "1461023058943-07fcbe16d735", alt: "Iced coffee with cream cascading into the glass" },
+        image: { id: "1461023058943-07fcbe16d735", alt: "Iced coffee with cream cascading into the glass", ratio: 1.493 },
         serving: "350 ml",
         nutrition: { kcal: 140, caffeine: 200, protein: 2, sugar: 12, fat: 8 },
         benefits: [
@@ -241,7 +241,7 @@ export const menu: MenuCategory[] = [
         name: "Butter Croissant",
         description: "Laminated for three days with cultured butter. Shatteringly crisp.",
         price: "₹160",
-        image: { id: "1530610476181-d83430b64dcd", alt: "Golden butter croissants on a tray" },
+        image: { id: "1530610476181-d83430b64dcd", alt: "Golden butter croissants on a tray", ratio: 0.749 },
         serving: "1 piece · 70 g",
         nutrition: { kcal: 270, caffeine: 0, protein: 5, sugar: 5, fat: 15 },
         benefits: [
@@ -257,7 +257,7 @@ export const menu: MenuCategory[] = [
         name: "Almond Croissant",
         description: "Twice-baked with frangipane, flaked almonds and a snowfall of sugar.",
         price: "₹190",
-        image: { id: "1555507036-ab1f4038808a", alt: "Almond croissants dusted with icing sugar" },
+        image: { id: "1555507036-ab1f4038808a", alt: "Almond croissants dusted with icing sugar", ratio: 1.25 },
         serving: "1 piece · 110 g",
         nutrition: { kcal: 400, caffeine: 0, protein: 9, sugar: 18, fat: 22 },
         benefits: [
@@ -273,7 +273,7 @@ export const menu: MenuCategory[] = [
         name: "Chocolate Danish",
         description: "Dark chocolate wrapped in flaky pastry, finished with sea salt.",
         price: "₹200",
-        image: { id: "1509365465985-25d11c17e812", alt: "Chocolate pastry swirls dusted with sugar" },
+        image: { id: "1509365465985-25d11c17e812", alt: "Chocolate pastry swirls dusted with sugar", ratio: 0.749 },
         serving: "1 piece · 95 g",
         nutrition: { kcal: 330, caffeine: 10, protein: 6, sugar: 17, fat: 18 },
         benefits: [
@@ -289,7 +289,7 @@ export const menu: MenuCategory[] = [
         name: "Banana Bread",
         description: "Dense, dark, and made with very ripe bananas. Toasted, with salted butter.",
         price: "₹180",
-        image: { id: "1606101273945-e9eba91c0dc4", alt: "Sliced banana bread with pecans" },
+        image: { id: "1606101273945-e9eba91c0dc4", alt: "Sliced banana bread with pecans", ratio: 1.504 },
         serving: "1 slice · 90 g",
         nutrition: { kcal: 300, caffeine: 0, protein: 5, sugar: 22, fat: 11 },
         benefits: [
