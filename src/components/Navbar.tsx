@@ -106,7 +106,8 @@ export function Navbar() {
               >
                 <span aria-hidden="true" className="flex w-5 flex-col gap-[5px]">
                   <span className="block h-px w-full bg-current" />
-                  <span className="block h-px w-3/4 bg-current" />
+                  <span className="block h-px w-full bg-current" />
+                  <span className="block h-px w-full bg-current" />
                 </span>
               </button>
             </div>
