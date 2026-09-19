@@ -85,3 +85,23 @@ export const SoundIcon = ({ on = false, ...props }: IconProps & { on?: boolean }
     )}
   </svg>
 );
+
+export const InfoIcon = (props: IconProps) => (
+  <svg {...defaults} {...props}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 11v5M12 8h.01" />
+  </svg>
+);
+
+export const CloseIcon = (props: IconProps) => (
+  <svg {...defaults} {...props}>
+    <path d="M6 6l12 12M18 6 6 18" />
+  </svg>
+);
+
+export const LeafIcon = (props: IconProps) => (
+  <svg {...defaults} {...props}>
+    <path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z" />
+    <path d="M5 19c3-4 6-7 10-10" />
+  </svg>
+);

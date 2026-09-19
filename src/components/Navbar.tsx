@@ -1,9 +1,10 @@
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { navLinks, site } from "../content/site";
 import { cn } from "../lib/media";
 import { EASE } from "../lib/motion";
 import { useActiveSection } from "../lib/useActiveSection";
+import { useModal } from "../lib/useModal";
 import { AmbienceToggle } from "./AmbienceToggle";
 import { Button } from "./Button";
 
@@ -15,6 +16,7 @@ export function Navbar() {
   const scrolledRef = useRef(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const active = useActiveSection(SECTION_IDS);
 
@@ -29,25 +31,8 @@ export function Navbar() {
 
   const close = useCallback(() => setOpen(false), []);
 
-  // Lock scroll, trap focus target, close on Escape while the menu is open.
-  useEffect(() => {
-    if (!open) return;
-    const toggle = toggleRef.current;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    closeRef.current?.focus();
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-    };
-    window.addEventListener("keydown", onKey);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", onKey);
-      toggle?.focus();
-    };
-  }, [open, close]);
+  // Scroll lock, focus trap, Escape and focus restoration.
+  useModal(open, close, menuRef, closeRef);
 
   return (
     <>
@@ -132,6 +117,7 @@ export function Navbar() {
       <AnimatePresence>
         {open ? (
           <motion.div
+            ref={menuRef}
             id="mobile-menu"
             role="dialog"
             aria-modal="true"

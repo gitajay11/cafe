@@ -1,9 +1,10 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useRef, useState, type KeyboardEvent } from "react";
-import { menu, type MenuCategory } from "../content/menu";
+import { useCallback, useRef, useState, type KeyboardEvent } from "react";
+import { menu, type MenuCategory, type MenuItem } from "../content/menu";
 import { cn } from "../lib/media";
 import { EASE, staggerContainer } from "../lib/motion";
 import { MenuCard } from "../components/MenuCard";
+import { MenuItemDialog } from "../components/MenuItemDialog";
 import { ScrollReveal } from "../components/ScrollReveal";
 import { SectionHeading } from "../components/SectionHeading";
 
@@ -11,6 +12,8 @@ type CategoryId = MenuCategory["id"];
 
 export function Menu() {
   const [active, setActive] = useState<CategoryId>(menu[0].id);
+  const [selected, setSelected] = useState<MenuItem | null>(null);
+  const closeDialog = useCallback(() => setSelected(null), []);
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const reduce = useReducedMotion();
   const category = menu.find((c) => c.id === active) ?? menu[0];
@@ -111,7 +114,7 @@ export function Menu() {
                 className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
               >
                 {category.items.map((item, index) => (
-                  <MenuCard key={item.name} item={item} index={index} />
+                  <MenuCard key={item.name} item={item} index={index} onSelect={setSelected} />
                 ))}
               </motion.div>
             </motion.div>
@@ -123,9 +126,11 @@ export function Menu() {
           delay={0.2}
           className="mx-auto mt-12 max-w-lg text-center text-xs uppercase tracking-[0.2em] text-white/35"
         >
-          Oat and almond milk at no extra charge · Ask about today's single origin
+          Tap any item for nutrition · Oat and almond milk at no extra charge
         </ScrollReveal>
       </div>
+
+      <MenuItemDialog item={selected} categoryLabel={category.label} onClose={closeDialog} />
     </section>
   );
 }

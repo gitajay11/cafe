@@ -53,6 +53,16 @@ export const scaleIn: Variants = {
   }),
 };
 
+/** Opacity + lift only — no filter, for grids of many cards. */
+export const liftIn: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (delay: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: withDelay({ duration: 0.7, ease: EASE }, delay),
+  }),
+};
+
 export const staggerContainer: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
