@@ -17,6 +17,14 @@ export function Footer() {
     <footer className="relative z-10 border-t border-white/[0.06] pt-20 pb-10 sm:pt-28">
       <div className="container-x">
         <ScrollReveal className="text-center">
+          <img
+            src="/logo-192.png"
+            alt=""
+            width={96}
+            height={96}
+            loading="lazy"
+            className="mx-auto mb-6 h-20 w-20 rounded-full sm:h-24 sm:w-24"
+          />
           <a
             href="#top"
             className="inline-block font-heading text-[clamp(3rem,13vw,10.5rem)] italic leading-[0.9] tracking-[-0.04em] text-cream"

@@ -1,6 +1,16 @@
 import nodemailer, { type Transporter } from "nodemailer";
 import { validateReservation, type ReservationErrors, type ReservationInput } from "../src/lib/reservationSchema.js";
 import { buildIcs, cafeEmail, guestEmail, type EmailContext } from "./email.js";
+import { EMAIL_LOGO_CID, EMAIL_LOGO_JPEG_BASE64 } from "./logoData.js";
+
+/** Inline logo referenced from the email header as cid:cafe-logo. */
+const logoAttachment = {
+  filename: "logo.jpg",
+  content: Buffer.from(EMAIL_LOGO_JPEG_BASE64, "base64"),
+  contentType: "image/jpeg",
+  cid: EMAIL_LOGO_CID,
+  contentDisposition: "inline" as const,
+};
 
 export interface HandlerResult {
   status: number;
@@ -90,6 +100,7 @@ export async function handleReservation(body: unknown): Promise<HandlerResult> {
       to: cafeInbox,
       replyTo: `${input.name} <${input.email}>`,
       ...toCafe,
+      attachments: [logoAttachment],
       icalEvent: {
         filename: "reservation.ics",
         method: "PUBLISH",
@@ -104,6 +115,7 @@ export async function handleReservation(body: unknown): Promise<HandlerResult> {
         to: `${input.name} <${input.email}>`,
         replyTo: cafeInbox,
         ...toGuest,
+        attachments: [logoAttachment],
         icalEvent: {
           filename: "reservation.ics",
           method: "PUBLISH",

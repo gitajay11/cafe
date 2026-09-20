@@ -53,9 +53,10 @@ export function Navbar() {
           >
             <a
               href="#top"
-              className="relative z-10 px-2 font-heading text-[1.55rem] italic leading-none tracking-[-0.02em] text-cream sm:text-[1.7rem]"
+              className="relative z-10 flex items-center gap-2.5 px-2 font-heading text-[1.55rem] italic leading-none tracking-[-0.02em] text-cream sm:text-[1.7rem]"
               aria-label={`${site.name} — back to top`}
             >
+              <img src="/logo-96.png" alt="" width={36} height={36} className="h-9 w-9 shrink-0 rounded-full" />
               {site.name}
             </a>
 
@@ -130,7 +131,10 @@ export function Navbar() {
             className="fixed inset-0 z-[60] flex flex-col bg-ink/95 backdrop-blur-2xl md:hidden"
           >
             <div className="container-x flex items-center justify-between pt-5">
-              <span className="px-2 font-heading text-[1.55rem] italic leading-none text-cream">{site.name}</span>
+              <span className="flex items-center gap-2.5 px-2 font-heading text-[1.55rem] italic leading-none text-cream">
+                <img src="/logo-96.png" alt="" width={36} height={36} className="h-9 w-9 rounded-full" />
+                {site.name}
+              </span>
               <button
                 ref={closeRef}
                 type="button"

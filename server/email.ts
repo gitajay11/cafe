@@ -8,6 +8,7 @@
  */
 import { directionsUrl, site } from "../src/content/site.js";
 import { formatTime, parseISODate, toMinutes, type ReservationInput } from "../src/lib/reservationSchema.js";
+import { EMAIL_LOGO_CID } from "./logoData.js";
 
 export interface EmailMessage {
   subject: string;
@@ -241,10 +242,10 @@ function layout(ctx: EmailContext, preheader: string, body: string, footerNote: 
 
     <!-- Header band -->
     <tr><td style="background:${C.espresso};border-radius:24px 24px 0 0;padding:30px 40px;text-align:center">
-      <a href="${ctx.siteUrl}" style="text-decoration:none">
-        <span style="font-family:${SERIF};font-size:30px;font-style:italic;color:${C.cream};letter-spacing:-0.5px">${escapeHtml(ctx.cafeName)}</span>
+      <a href="${ctx.siteUrl}" style="text-decoration:none;display:inline-block">
+        <img src="cid:${EMAIL_LOGO_CID}" width="96" height="96" alt="${escapeHtml(ctx.cafeName)}" style="display:block;margin:0 auto;width:96px;height:96px;border-radius:48px;font-family:${SERIF};font-size:28px;font-style:italic;color:${C.cream};text-align:center;line-height:96px">
       </a>
-      <p style="margin:8px 0 0;font-family:${SANS};font-size:10px;letter-spacing:4px;text-transform:uppercase;color:${C.caramel}">Specialty coffee · ${escapeHtml(site.address.line2.split(",")[0] ?? "")}</p>
+      <p style="margin:14px 0 0;font-family:${SANS};font-size:10px;letter-spacing:4px;text-transform:uppercase;color:${C.caramel}">Specialty coffee · ${escapeHtml(site.address.line2.split(",")[0] ?? "")}</p>
     </td></tr>
     <tr><td style="height:4px;background:${C.caramel};font-size:0;line-height:0">&nbsp;</td></tr>
 
