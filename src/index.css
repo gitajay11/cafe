@@ -169,6 +169,13 @@
     transition: opacity 0.5s ease;
   }
 
+  /* Near-opaque variant for popovers nested inside another glass surface:
+     Chromium won't blur the parent's content behind a nested backdrop-filter,
+     so these carry their own dark fill instead of relying on the blur. */
+  .glass-opaque {
+    --glass-bg: rgba(19, 14, 11, 0.97);
+  }
+
   /* ---- Navbar shell (transparent → glass on scroll) ---------------- */
   .nav-shell {
     --glass-bg: rgba(12, 10, 8, 0);
@@ -310,6 +317,17 @@
   }
   .skip-link:focus-visible {
     transform: translateY(0);
+  }
+
+  /* ---- Guest stepper: hide native number spinners ------------------ */
+  .guest-input {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .guest-input::-webkit-outer-spin-button,
+  .guest-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 
   /* ---- Spinner ----------------------------------------------------- */

@@ -4,17 +4,20 @@ import { site } from "../content/site";
 import { cn } from "../lib/media";
 import { EASE } from "../lib/motion";
 import {
-  GUEST_OPTIONS,
   ReservationNotConfiguredError,
+  ReservationRejectedError,
   reservationMailto,
   submitReservation,
-  todayISO,
   validateReservation,
   type ReservationErrors,
   type ReservationInput,
 } from "../lib/reservation";
-import { AlertIcon, CheckIcon, ChevronDownIcon } from "./Icons";
+import { addDays, BOOKING_WINDOW_DAYS, formatTime, timeSlotsFor, toISODate, todayISO } from "../lib/reservationSchema";
+import { AlertIcon, CheckIcon } from "./Icons";
 import { ArrowRight, Button } from "./Button";
+import { DatePicker } from "./DatePicker";
+import { GuestStepper } from "./GuestStepper";
+import { TimePicker } from "./TimePicker";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -78,6 +81,7 @@ export function ReservationForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [notConfigured, setNotConfigured] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
 
   const update =
     (name: keyof ReservationInput) =>
@@ -86,6 +90,16 @@ export function ReservationForm() {
       setValues((prev) => ({ ...prev, [name]: value }));
       if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
     };
+
+  const setField = (name: keyof ReservationInput) => (value: string) => {
+    setValues((prev) => {
+      const next = { ...prev, [name]: value };
+      // A new date can invalidate the chosen time (different hours / past slot).
+      if (name === "date" && prev.time && !timeSlotsFor(value).includes(prev.time)) next.time = "";
+      return next;
+    });
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -104,12 +118,15 @@ export function ReservationForm() {
     setNotConfigured(false);
 
     try {
-      await submitReservation(values);
+      await submitReservation({ ...values, website: honeypot });
       setStatus("success");
     } catch (error) {
       setStatus("error");
       if (error instanceof ReservationNotConfiguredError) {
         setNotConfigured(true);
+        setErrorMessage(error.message);
+      } else if (error instanceof ReservationRejectedError) {
+        setErrors(error.errors);
         setErrorMessage(error.message);
       } else {
         setErrorMessage("We couldn't send your request just now. Please try again in a moment.");
@@ -123,7 +140,11 @@ export function ReservationForm() {
     setStatus("idle");
     setErrorMessage(null);
     setNotConfigured(false);
+    setHoneypot("");
   };
+
+  const minDate = todayISO();
+  const maxDate = toISODate(addDays(new Date(), BOOKING_WINDOW_DAYS));
 
   return (
     <div className="relative" aria-live="polite">
@@ -145,7 +166,7 @@ export function ReservationForm() {
             <p className="max-w-md text-white/65">
               Thank you, {values.name.trim()}. We'll confirm your table for {values.guests} on{" "}
               <span className="text-cream">{values.date}</span> at{" "}
-              <span className="text-cream">{values.time}</span> by email shortly.
+              <span className="text-cream">{formatTime(values.time)}</span> by email shortly.
             </p>
             <Button variant="glass" size="sm" onClick={reset}>
               Make another request
@@ -212,52 +233,57 @@ export function ReservationForm() {
 
             <Field id={fieldId("guests")} label="Guests" error={errors.guests}>
               {(a11y) => (
-                <div className="relative">
-                  <select
-                    {...a11y}
-                    name="guests"
-                    value={values.guests}
-                    onChange={update("guests")}
-                    className={cn(inputBase, "appearance-none pr-10")}
-                  >
-                    {GUEST_OPTIONS.map((n) => (
-                      <option key={n} value={n}>
-                        {n} {n === "1" ? "guest" : "guests"}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDownIcon className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
-                </div>
+                <GuestStepper
+                  id={a11y.id}
+                  value={values.guests}
+                  onChange={setField("guests")}
+                  invalid={a11y["aria-invalid"]}
+                  describedBy={a11y["aria-describedby"]}
+                />
               )}
             </Field>
 
             <Field id={fieldId("date")} label="Date" error={errors.date}>
               {(a11y) => (
-                <input
-                  {...a11y}
-                  type="date"
-                  name="date"
-                  min={todayISO()}
+                <DatePicker
+                  id={a11y.id}
                   value={values.date}
-                  onChange={update("date")}
-                  className={inputBase}
+                  onChange={setField("date")}
+                  min={minDate}
+                  max={maxDate}
+                  invalid={a11y["aria-invalid"]}
+                  describedBy={a11y["aria-describedby"]}
                 />
               )}
             </Field>
 
-            <Field id={fieldId("time")} label="Time" error={errors.time} hint="We're open from 7:00 AM.">
+            <Field id={fieldId("time")} label="Time" error={errors.time} hint="Last seating an hour before close.">
               {(a11y) => (
-                <input
-                  {...a11y}
-                  type="time"
-                  name="time"
-                  step={900}
+                <TimePicker
+                  id={a11y.id}
                   value={values.time}
-                  onChange={update("time")}
-                  className={inputBase}
+                  onChange={setField("time")}
+                  date={values.date}
+                  invalid={a11y["aria-invalid"]}
+                  describedBy={a11y["aria-describedby"]}
+                  align="end"
                 />
               )}
             </Field>
+
+            {/* Honeypot: invisible to people, filled by bots; the server drops these. */}
+            <div className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+              <label htmlFor={`${fieldId("message")}-website`}>Website</label>
+              <input
+                id={`${fieldId("message")}-website`}
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+              />
+            </div>
 
             <Field
               id={fieldId("message")}

@@ -105,3 +105,42 @@ export const LeafIcon = (props: IconProps) => (
     <path d="M5 19c3-4 6-7 10-10" />
   </svg>
 );
+
+export const CalendarIcon = (props: IconProps) => (
+  <svg {...defaults} {...props}>
+    <rect x="3" y="5" width="18" height="16" rx="3" />
+    <path d="M3 10h18M8 3v4M16 3v4" />
+  </svg>
+);
+
+export const ChevronLeftIcon = (props: IconProps) => (
+  <svg {...defaults} {...props}>
+    <path d="m15 6-6 6 6 6" />
+  </svg>
+);
+
+export const ChevronRightIcon = (props: IconProps) => (
+  <svg {...defaults} {...props}>
+    <path d="m9 6 6 6-6 6" />
+  </svg>
+);
+
+export const MinusIcon = (props: IconProps) => (
+  <svg {...defaults} {...props}>
+    <path d="M6 12h12" />
+  </svg>
+);
+
+export const PlusIcon = (props: IconProps) => (
+  <svg {...defaults} {...props}>
+    <path d="M12 6v12M6 12h12" />
+  </svg>
+);
+
+export const UsersIcon = (props: IconProps) => (
+  <svg {...defaults} {...props}>
+    <circle cx="9" cy="8" r="3.5" />
+    <path d="M2.5 20a6.5 6.5 0 0 1 13 0" />
+    <path d="M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4.5-6.2" />
+  </svg>
+);

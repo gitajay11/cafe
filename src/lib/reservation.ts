@@ -1,23 +1,15 @@
 /**
- * Reservation transport layer.
+ * Browser-side reservation transport.
  *
- * There is no backend in this project. Set `VITE_RESERVATION_ENDPOINT` to an
- * HTTPS URL that accepts a JSON POST and the form will submit to it; until
- * then `submitReservation` throws `ReservationNotConfiguredError` so the UI
- * can show an honest fallback (call / email) instead of a fake success.
+ * Requests go to `VITE_RESERVATION_ENDPOINT` if set, otherwise to
+ * `/api/reserve` — the Node server in `server/` (proxied by Vite in dev)
+ * or the Vercel function in `api/`. The server answers 503 when SMTP
+ * isn't configured, which the form turns into an honest fallback.
  */
+import type { ReservationInput } from "./reservationSchema";
 
-export interface ReservationInput {
-  name: string;
-  email: string;
-  phone: string;
-  date: string; // YYYY-MM-DD
-  time: string; // HH:MM
-  guests: string;
-  message: string;
-}
-
-export type ReservationErrors = Partial<Record<keyof ReservationInput, string>>;
+export type { ReservationErrors, ReservationInput } from "./reservationSchema";
+export { GUEST_OPTIONS, todayISO, validateReservation } from "./reservationSchema";
 
 export class ReservationNotConfiguredError extends Error {
   constructor() {
@@ -26,54 +18,50 @@ export class ReservationNotConfiguredError extends Error {
   }
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-export const GUEST_OPTIONS = Array.from({ length: 12 }, (_, i) => String(i + 1));
-
-export function todayISO(): string {
-  const d = new Date();
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
-
-export function validateReservation(input: ReservationInput): ReservationErrors {
-  const errors: ReservationErrors = {};
-
-  if (input.name.trim().length < 2) errors.name = "Please tell us your name.";
-  if (!EMAIL_RE.test(input.email.trim())) errors.email = "Enter a valid email address.";
-
-  const digits = input.phone.replace(/[^\d]/g, "");
-  if (digits.length < 7 || digits.length > 15) errors.phone = "Enter a valid phone number.";
-
-  if (!input.date) {
-    errors.date = "Choose a date.";
-  } else if (input.date < todayISO()) {
-    errors.date = "That date has already passed.";
-  }
-
-  if (!input.time) errors.time = "Choose a time.";
-  if (!GUEST_OPTIONS.includes(input.guests)) errors.guests = "How many guests?";
-  if (input.message.length > 500) errors.message = "Keep the message under 500 characters.";
-
-  return errors;
-}
-
-export async function submitReservation(input: ReservationInput): Promise<void> {
-  const endpoint = import.meta.env.VITE_RESERVATION_ENDPOINT;
-  if (!endpoint) throw new ReservationNotConfiguredError();
-
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ ...input, source: "website" }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Reservation request failed (${response.status}).`);
+export class ReservationRejectedError extends Error {
+  readonly errors: Partial<Record<keyof ReservationInput, string>>;
+  constructor(message: string, errors: Partial<Record<keyof ReservationInput, string>> = {}) {
+    super(message);
+    this.name = "ReservationRejectedError";
+    this.errors = errors;
   }
 }
 
-/** Pre-filled email fallback used when no endpoint is configured. */
+const ENDPOINT = import.meta.env.VITE_RESERVATION_ENDPOINT || "/api/reserve";
+
+export async function submitReservation(input: ReservationInput & { website?: string }): Promise<void> {
+  let response: Response;
+  try {
+    response = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ ...input, source: "website" }),
+    });
+  } catch {
+    throw new Error("We couldn't reach the reservation service.");
+  }
+
+  if (response.ok) return;
+
+  // Server not deployed / SMTP not configured → honest fallback UI.
+  if (response.status === 404 || response.status === 503) {
+    throw new ReservationNotConfiguredError();
+  }
+
+  let payload: { error?: string; errors?: Record<string, string> } = {};
+  try {
+    payload = await response.json();
+  } catch {
+    /* non-JSON error body */
+  }
+
+  if (response.status === 400 || response.status === 422) {
+    throw new ReservationRejectedError(payload.error ?? "Please check the highlighted fields.", payload.errors ?? {});
+  }
+  throw new Error(payload.error ?? `Reservation request failed (${response.status}).`);
+}
+
+/** Pre-filled email fallback used when no endpoint is available. */
 export function reservationMailto(to: string, input: ReservationInput): string {
   const subject = `Reservation request — ${input.date} at ${input.time}`;
   const body = [
