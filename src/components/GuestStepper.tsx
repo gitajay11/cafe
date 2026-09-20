@@ -23,7 +23,7 @@ export function GuestStepper({ id, value, onChange, invalid = false, describedBy
   return (
     <div
       className={cn(
-        "flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 transition-[border-color] duration-300 focus-within:border-caramel/70",
+        "flex h-12 items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-3 transition-[border-color] duration-300 focus-within:border-caramel/70",
         invalid && "border-red-400/60",
       )}
     >
@@ -31,7 +31,7 @@ export function GuestStepper({ id, value, onChange, invalid = false, describedBy
       <button type="button" onClick={() => step(-1)} disabled={n <= 1} aria-label="Fewer guests" className={buttonClass}>
         <MinusIcon className="h-4 w-4" />
       </button>
-      <div className="flex flex-1 items-baseline justify-center gap-1.5">
+      <div className="flex flex-1 items-baseline justify-center gap-2">
         <input
           id={id}
           type="number"
@@ -44,7 +44,7 @@ export function GuestStepper({ id, value, onChange, invalid = false, describedBy
           onBlur={() => onChange(String(clamp(n)))}
           aria-invalid={invalid}
           aria-describedby={describedBy}
-          className="guest-input w-10 bg-transparent text-center font-heading text-[1.6rem] italic leading-none text-cream tabular-nums focus:outline-none"
+          className="guest-input h-9 w-10 bg-transparent p-0 text-center font-heading text-[1.6rem] italic leading-none text-cream tabular-nums focus:outline-none"
         />
         <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/45">{n === 1 ? "guest" : "guests"}</span>
       </div>

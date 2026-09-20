@@ -243,7 +243,7 @@ export function ReservationForm() {
               )}
             </Field>
 
-            <Field id={fieldId("date")} label="Date" error={errors.date}>
+            <Field id={fieldId("date")} label="Date" error={errors.date} hint={`Up to ${BOOKING_WINDOW_DAYS} days ahead.`}>
               {(a11y) => (
                 <DatePicker
                   id={a11y.id}
