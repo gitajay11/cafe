@@ -1,6 +1,6 @@
 import nodemailer, { type Transporter } from "nodemailer";
-import { validateReservation, type ReservationErrors, type ReservationInput } from "../src/lib/reservationSchema.ts";
-import { buildIcs, cafeEmail, guestEmail, type EmailContext } from "./email.ts";
+import { validateReservation, type ReservationErrors, type ReservationInput } from "../src/lib/reservationSchema.js";
+import { buildIcs, cafeEmail, guestEmail, type EmailContext } from "./email.js";
 
 export interface HandlerResult {
   status: number;

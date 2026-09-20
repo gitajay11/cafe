@@ -10,7 +10,7 @@
  * VITE_RESERVATION_ENDPOINT on the frontend and ALLOWED_ORIGIN here.
  */
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
-import { handleReservation, isMailConfigured } from "./reservation.ts";
+import { handleReservation, isMailConfigured } from "./reservation.js";
 
 const PORT = Number(process.env.PORT ?? 8790);
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN ?? "";

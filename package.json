@@ -8,8 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "server": "node --env-file-if-exists=.env --watch server/index.ts",
-    "server:start": "node --env-file-if-exists=.env server/index.ts"
+    "server": "node --env-file-if-exists=.env --import tsx --watch server/index.ts",
+    "server:start": "node --env-file-if-exists=.env --import tsx server/index.ts"
   },
   "dependencies": {
     "framer-motion": "^13.4.0",
@@ -26,6 +26,7 @@
     "@vitejs/plugin-react": "^6.1.1",
     "oxlint": "^1.81.0",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
     "typescript": "~6.0.2",
     "vite": "^8.3.0"
   }

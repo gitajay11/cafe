@@ -37,7 +37,9 @@ The form validates client-side, then POSTs JSON to `/api/reserve`. The email is 
 - `server/reservation.ts` — framework-agnostic handler: validation (shared with the browser via `src/lib/reservationSchema.ts`), honeypot check, then sends the emails.
 - `server/email.ts` — branded, table-based HTML + plain-text templates for the café notification and the guest acknowledgement, each with an attached `.ics` invite and one-tap actions (Google Calendar, directions, call, pre-filled replies).
 - `server/index.ts` — tiny Node HTTP server for development and self-hosting (`npm run server`, rate-limited, CORS via `ALLOWED_ORIGIN`).
-- `api/reserve.ts` — the same handler as a Vercel serverless function, picked up automatically when the repo is deployed on Vercel.
+- `api/reserve.ts` — the same handler as a Vercel Function, picked up automatically when the repo is deployed on Vercel. `GET /api/reserve` is a health check (`{ ok, mailConfigured }`), `POST` submits.
+
+Server code imports with `.js` specifiers (`./email.js` → `email.ts`): Vercel compiles each `.ts` file to `.js` and keeps specifiers verbatim, so `.ts` specifiers would break at runtime. Locally the server runs through `tsx`, which resolves them the same way.
 
 Configure with environment variables (copy `.env.example` to `.env` locally; set the same keys in your host): `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, `MAIL_TO`, `MAIL_GUEST_COPY`. Until SMTP is configured the API answers 503 and the form shows an honest call/email fallback instead of a fake success.
 

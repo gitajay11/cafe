@@ -6,8 +6,8 @@
  * real actions that work in every client: an .ics invite, Google Calendar,
  * directions, one-tap call, and pre-filled reply links.
  */
-import { directionsUrl, site } from "../src/content/site.ts";
-import { formatTime, parseISODate, toMinutes, type ReservationInput } from "../src/lib/reservationSchema.ts";
+import { directionsUrl, site } from "../src/content/site.js";
+import { formatTime, parseISODate, toMinutes, type ReservationInput } from "../src/lib/reservationSchema.js";
 
 export interface EmailMessage {
   subject: string;
