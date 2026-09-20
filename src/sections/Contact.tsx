@@ -24,7 +24,7 @@ export function Contact() {
 
         <ScrollReveal delay={0.2} amount={0.1} className="mx-auto mt-14 max-w-5xl">
           <GlassCard strong className="grid grid-cols-1 gap-10 rounded-[32px] p-6 sm:p-10 lg:grid-cols-12 lg:gap-12 lg:p-12">
-            <aside className="flex flex-col justify-between gap-8 lg:col-span-4">
+            <aside className="flex flex-col gap-8 lg:col-span-4">
               <div>
                 <p className="eyebrow">{"// "}Good to know</p>
                 <ul role="list" className="mt-6 space-y-5 text-[15px] leading-relaxed text-white/65">
@@ -48,14 +48,17 @@ export function Contact() {
                 </ul>
               </div>
 
-              <dl className="grid grid-cols-2 gap-4 border-t border-white/10 pt-6 lg:grid-cols-1">
-                {site.hours.map((h) => (
-                  <div key={h.days}>
-                    <dt className="text-[10.5px] font-medium uppercase tracking-[0.22em] text-white/40">{h.days}</dt>
-                    <dd className="mt-1 text-sm text-cream/85">{h.time}</dd>
-                  </div>
-                ))}
-              </dl>
+              <div className="border-t border-white/10 pt-7">
+                <p className="eyebrow">{"// "}Hours</p>
+                <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4 lg:grid-cols-1 lg:gap-y-5">
+                  {site.hours.map((h) => (
+                    <div key={h.days} className="flex flex-col gap-1 lg:flex-row lg:items-baseline lg:justify-between lg:gap-4">
+                      <dt className="text-[10.5px] font-medium uppercase tracking-[0.22em] text-white/45">{h.days}</dt>
+                      <dd className="text-[15px] text-cream/85 tabular-nums">{h.time}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
             </aside>
 
             <div className="lg:col-span-8">
