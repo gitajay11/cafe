@@ -38,7 +38,9 @@ The form validates client-side, then POSTs JSON to `/api/reserve`. The email is 
 - `server/index.ts` — tiny Node HTTP server for development and self-hosting (`npm run server`, rate-limited, CORS via `ALLOWED_ORIGIN`).
 - `api/reserve.ts` — the same handler as a Vercel serverless function, picked up automatically when the repo is deployed on Vercel.
 
-Configure with environment variables (copy `.env.example` to `.env` locally; set the same keys in your host): `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, `MAIL_TO`, optional `MAIL_GUEST_COPY`, `MAIL_DRY_RUN` (log instead of send), `CAFE_NAME`. Until SMTP is configured the API answers 503 and the form shows an honest call/email fallback instead of a fake success.
+Configure with environment variables (copy `.env.example` to `.env` locally; set the same keys in your host): `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, `MAIL_TO`, `MAIL_GUEST_COPY`. Until SMTP is configured the API answers 503 and the form shows an honest call/email fallback instead of a fake success.
+
+Optional, read only when set: `SMTP_SECURE=true` (implicit TLS; assumed for port 465), `MAIL_DRY_RUN=true` (log the email instead of sending), `CAFE_NAME`, `PORT` (default 8790), `ALLOWED_ORIGIN` (CORS when the API is on another origin) and, on the frontend, `VITE_RESERVATION_ENDPOINT` (defaults to `/api/reserve`).
 
 Opening hours, the 60-day booking window and 30-minute slots live in `src/lib/reservationSchema.ts`.
 
